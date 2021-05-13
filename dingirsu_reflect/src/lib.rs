@@ -9,7 +9,7 @@ use std::str::FromStr;
 pub fn Dingirsu_Reflect(input: TokenStream) -> TokenStream {
     
     let mut original_code =input.to_string();
-    original_code=original_code.replace("\n", " ");
+    //original_code=original_code.replace(" fn\n", " fn");
     let mut code:Vec<&str> =original_code.splitn(original_code.len()," ").collect();
     let a=code.len();
     let mut fn_list:Vec<&str>=Vec::new();
@@ -18,7 +18,7 @@ pub fn Dingirsu_Reflect(input: TokenStream) -> TokenStream {
     {
         let item=code[index];
         
-        if ((item=="fn" )  && index+1< code.len())
+        if ((item=="fn" || code[index]=="fn\n" )  )
         {
             
             let t_fn_name:Vec<&str>=code[index+1].split("(").collect();
@@ -90,11 +90,15 @@ pub fn Dingirsu_Reflect(input: TokenStream) -> TokenStream {
     fn Get_FunctionName(index:usize,code:Vec<&str>)-> Option<&str>
     {
         let mut i=index;
-        if(code[index]=="fn" )
+        if(code[index]=="fn" || code[index]=="fn\n")
         {
             
         loop {
             i=i+1;
+            if (i==code.len())
+            {
+                break;
+            }
             let mut t_str:&str=code[i];
             if(  t_str.len()>0 && !(t_str.starts_with(" "))  )
             {
@@ -110,16 +114,6 @@ pub fn Dingirsu_Reflect(input: TokenStream) -> TokenStream {
     }
     
     return None;
-}
-
-
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
 }
 
 

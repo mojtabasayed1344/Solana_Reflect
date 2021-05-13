@@ -35,38 +35,10 @@ pub fn process_instruction(
         let mut pointer :*mut u64= 0 as *mut u64;
     }
 
-    //let a =solana_program::pubkey::Pubkey::new(&[0;32]);
-//    msg!("Helloworld Rust program entrypoint");
-//    
-//    // Iterating accounts is safer then indexing
-//    let accounts_iter = &mut accounts.iter();
-//    
-//    // Get the account to say hello to
-//    let account:&AccountInfo = next_account_info(accounts_iter).unwrap();
-//    //solana_sdk::account::create_account(sysvar: &S, lamports: u64)
-//    //solana_sdk::account::AccountSharedData::from(account.owner);
-//    let s=account.is_signer;
-//    // The account must be owned by the program in order to modify its data
-//    if account.owner != program_id {
-//        msg!("Greeted account does not have the correct program id");
-//        return Err(ProgramError::IncorrectProgramId);
-//    }
-//
-//    // The data must be large enough to hold a u32 count
-//    if account.try_data_len()? < mem::size_of::<u32>() {
-//        msg!("Greeted account data length too small for u32");
-//        return Err(ProgramError::InvalidAccountData);
-//    }
-//
-//    // Increment and store the number of times the account has been greeted
-//    let mut data = account.try_borrow_mut_data()?;
-//    let mut num_greets = LittleEndian::read_u32(&data);
-//    num_greets += 1;
-//    LittleEndian::write_u32(&mut data[0..], num_greets);
-//
-    msg!("Hello!");
-//
 
+    msg!("Reflect for Solana");
+
+    let mut index=0;
     let mut temp_str:Vec<u8>= Vec::new();
     let mut str_iter:std::slice::Iter<u8>=_instruction_data.iter();
     let mut s_item:Option<&u8>=None;
@@ -76,6 +48,7 @@ pub fn process_instruction(
             break;
         }
         let s_u=s_item.unwrap();
+        index+=1;
         if (*s_u==0){
             break;
         }
@@ -84,16 +57,13 @@ pub fn process_instruction(
     }    
     
     let mut func_name=String::from_utf8(temp_str ).unwrap();
-    //let s_test="A";
-    //msg!("{0};",s_test.len());
-    //msg!("{0};",func_name.as_mut().len());
+
     let func=D_Processer::Reflect(func_name.as_mut());
-    //msg!("{0}",func.is_some());
+
     if (func.is_some())
-    {
-        
+    {        
         let func_u= func.unwrap();
-        func_u(program_id,accounts,_instruction_data);
+        func_u(program_id,accounts,&_instruction_data[index..]);
     }
     Ok(())
 }
@@ -110,7 +80,7 @@ Dingirsu_Reflect!{
             accounts: &[AccountInfo], // The account to say hello to
             _instruction_data: &[u8], // Ignored, all helloworld instructions are hellos
         ) -> ProgramResult {
-            msg!("A");
+            msg!("Reflect to function A");
             print!("A");
             Ok(())
         }
@@ -119,52 +89,53 @@ Dingirsu_Reflect!{
             accounts: &[AccountInfo], // The account to say hello to
             _instruction_data: &[u8], // Ignored, all helloworld instructions are hellos
         ) -> ProgramResult {
-            msg!("B");
+            msg!("Reflect to function B");
             print!("B");
             Ok(())
+            
         }
     }
     
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use solana_program::clock::Epoch;
-    #[test]
-    fn it_works() {
-        let program_id = Pubkey::default();
-        let key = Pubkey::default();
-        let mut lamports = 0;
-        let mut data = vec![0; mem::size_of::<u32>()];
-        LittleEndian::write_u32(&mut data, 0);
-        let owner = Pubkey::default();
-        let account = AccountInfo::new(
-            &key,
-            false,
-            true,
-            &mut lamports,
-            &mut data,
-            &owner,
-            false,
-            Epoch::default(),
-        );
-        let mut instruction_data: Vec<u8> = Vec::new();
-        let mut s=String::from("A\0");
-        let datas=s.as_bytes();
-        for  i in datas
-        {
-            instruction_data.push(*i);
-        }
-
-        let accounts = vec![account];
-
-        
-        process_instruction(&program_id, &accounts, &instruction_data).unwrap();
-
-
-        assert_eq!(0,1);
-    }
-}
+//#[cfg(test)]
+//mod tests {
+//    use super::*;
+//    use solana_program::clock::Epoch;
+//    #[test]
+//    fn it_works() {
+//        let program_id = Pubkey::default();
+//        let key = Pubkey::default();
+//        let mut lamports = 0;
+//        let mut data = vec![0; mem::size_of::<u32>()];
+//        LittleEndian::write_u32(&mut data, 0);
+//        let owner = Pubkey::default();
+//        let account = AccountInfo::new(
+//            &key,
+//            false,
+//            true,
+//            &mut lamports,
+//            &mut data,
+//            &owner,
+//            false,
+//            Epoch::default(),
+//        );
+//        let mut instruction_data: Vec<u8> = Vec::new();
+//        let mut s=String::from("A\0");
+//        let datas=s.as_bytes();
+//        for  i in datas
+//        {
+//            instruction_data.push(*i);
+//        }
+//
+//        let accounts = vec![account];
+//
+//        
+//        process_instruction(&program_id, &accounts, &instruction_data).unwrap();
+//
+//
+//        assert_eq!(0,1);
+//    }
+//}
 
 
