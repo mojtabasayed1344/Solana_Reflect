@@ -1,7 +1,7 @@
 # Solana_Reflect
 
-## Rust
-this code let developers generate function id and match function name with function automatically.
+## Rust Code
+this code let developers generate function id and match function name with function automatically in the compile-time. Anyone who witre solana contract may spare themselve from counting the function number and allocating id to functions;
 
     Dingirsu_Reflect!{
 
@@ -27,7 +27,8 @@ this code let developers generate function id and match function name with funct
         }
 
     }
-    
+    #[cfg(test)]
+    ..
     let mut instruction_data: Vec<u8> = Vec::new();
     let mut s=String::from("A\0");
     let datas=s.as_bytes();
@@ -35,7 +36,8 @@ this code let developers generate function id and match function name with funct
     {
         instruction_data.push(*i);
     }
-
+    ..
+    process_instruction(&program_id, &accounts, &instruction_data).unwrap();
 
 ## JS
 
@@ -70,4 +72,17 @@ The instruction data starts with a string wihch is a function name and ends with
         Reflect to function A
         Program 54wzi12wkAq9vEtvxqVZBcgESm9aArrtzcReN7kJ8mwQ consumed 966 of 200000 compute units
         Program 54wzi12wkAq9vEtvxqVZBcgESm9aArrtzcReN7kJ8mwQ success
+
+## prospect
+
+- Fix bugs during reflect p-macros
+- Multi-Programing-Language suppport for Solana api
+- Some other aspire that I've not got yet
+
+
+
+
+
+
+
 
